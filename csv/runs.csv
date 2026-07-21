@@ -1,3 +1,4 @@
 tk_run_id,tk_run_runner,tk_run_verifier,tk_run_duration,tk_run_category_dashname,tk_run_score,tk_run_distance,tk_run_speed,tk_run_date,tk_run_description,tk_run_link
 
 1,Linnea,Tester,01:01:01,Endless_Silos_Only_Normal,10000.00,100.00,10.01,12/12/2000,tester,
+2,Linnea,Score/dist/speed tester,01:01:01,Endless_Silos_Only_Normal,10234,1022.01,4.21,12/26/2005,winner,

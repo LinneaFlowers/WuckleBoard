@@ -95,10 +95,13 @@ def generate(templatedir, destinationdir, templateFilename):
             runId = run["tk_run_id"]
             runLink = f"../../runs/{runId}"
             runDuration = str(runDurationsInCategory[runId])
+            runScore = run["tk_run_score"]
+            runSpeed = run["tk_run_speed"]
+            runDistance = run["tk_run_distance"]
             runDate = run["tk_run_date"]
 
             # Concatenate a row to the table
-            lk_leaderboard += f'<tr><td>{place}.</td><td>{runner}</td><td><a href="{runLink}">{runDuration}</a></td><td>{runDate}</td></tr>'
+            lk_leaderboard += f'<tr><td>{place}.</td><td>{runner}</td><td>{runScore}</td><td><a href="{runLink}">{runDuration}</a></td><td>{runDistance}</td><td>{runSpeed}m/s</td><td>{runDate}</td></tr>'
 
             # Also handle replacing lk_run_place on run pages
             util_file.replaceTextInFile(
