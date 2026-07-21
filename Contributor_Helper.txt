@@ -1,0 +1,21 @@
+﻿From top to bottom here's what the folders contain
+
+**assets**- self explanatory
+
+**categories**- contains nothing by default, generates folders based upon entries in /csv/categories.csv. The HTML is from /templates
+
+**css**- self explanatory
+
+**csv**- storage for runs, categories, and basic settings for the website
+
+**runs**-folders are generated from the csv when adding a new category (or run) through the python script so deleting from there doesn't do anything. The HTML is from /templates
+
+**scripts** is the 3 options given when running  paceboard.py + the generation file which uses everything in /util/gen. 
+-/scripts/util is helpers used in the next folder 
+-/scripts/util/gen takes info from the csv folder and uses it with templates to generate html
+
+**templates** HTML templates. Category and runs used with info from the csv folder to make the runs/categories. Index is used when setting up the site.
+-The index is the main page you get when you load the website
+-The category is where you go from the index
+-Runs are the individual runs.
+
