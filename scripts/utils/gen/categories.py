@@ -43,8 +43,7 @@ def generate(templatedir, destinationdir, templateFilename):
             util_file.replaceTextInFile(f"{path}/index.html", key, config[key])
 
         ## lk_leaderboard handler ##
-
-        # Find runsInCategory
+        
         runsInCategory = {}
         for run in runs:
             thisRun = runs[run]
@@ -54,26 +53,46 @@ def generate(templatedir, destinationdir, templateFilename):
             ):
                 runsInCategory[thisRun["tk_run_id"]] = thisRun
 
-        # Find runDurationsInCategory by parsing runsInCategory values
-        runDurationsInCategory = {}
+        # Decide whether runs are ranked by score or duration
+        isEndless = "endless" in thisCategory["tk_category_dashname"].lower()
+
+        runSortValuesInCategory = {}
+
         for run in runsInCategory:
             thisRun = runsInCategory[run]
-            runDurationSplit = [
-                float(value) for value in thisRun["tk_run_duration"].split(":")
-            ]
-            runDurationsInCategory[thisRun["tk_run_id"]] = datetime.timedelta(
-                hours=runDurationSplit[0],
-                minutes=runDurationSplit[1],
-                seconds=runDurationSplit[2],
-            )
+            runId = thisRun["tk_run_id"]
 
-        # Find sortedRunsInCategory by sorting durations from runDurationsInCategory
-        sortedRunsInCategory = {
-            runId: runDuration
-            for runId, runDuration in sorted(
-                runDurationsInCategory.items(), key=lambda item: item[1]
-            )
-        }
+            if isEndless:
+                runSortValuesInCategory[runId] = float(thisRun["tk_run_score"])
+            else:
+                runDurationSplit = [
+                    float(value) for value in thisRun["tk_run_duration"].split(":")
+                ]
+
+                runSortValuesInCategory[runId] = datetime.timedelta(
+                    hours=runDurationSplit[0],
+                    minutes=runDurationSplit[1],
+                    seconds=runDurationSplit[2],
+                )
+
+        # Find sortedRunsInCategory by sorting durations from runDurationsInCategory, checking first if it's an endless category.
+        if isEndless:
+            sortedRunsInCategory = {
+                runId: score
+                for runId, score in sorted(
+                    runSortValuesInCategory.items(),
+                    key=lambda item: item[1],
+                    reverse=True,
+                )
+            }
+        else:
+            sortedRunsInCategory = {
+                runId: runDuration
+                for runId, runDuration in sorted(
+                    runSortValuesInCategory.items(),
+                    key=lambda item: item[1],
+                )
+            }
 
         # Find trimmedRunsInCategory by only including one run per runner from sortedRunsInCategory
         trimmedRunsInCategory = []
@@ -94,7 +113,7 @@ def generate(templatedir, destinationdir, templateFilename):
             runner = run["tk_run_runner"]
             runId = run["tk_run_id"]
             runLink = f"../../runs/{runId}"
-            runDuration = str(runDurationsInCategory[runId])
+            runDuration = str(runSortValuesInCategory[runId])
             runScore = run["tk_run_score"]
             runSpeed = run["tk_run_speed"]
             runDistance = run["tk_run_distance"]
